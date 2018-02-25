@@ -50,7 +50,8 @@ module.exports = {
         // Workaround for angular/angular#11580
         new webpack.ContextReplacementPlugin(
             // The (\\|\/) piece accounts for path separators in *nix and Windows
-            /angular(\\|\/)core(\\|\/)@angular/,
+            // For Angular 5, see also https://github.com/angular/angular/issues/20357#issuecomment-343683491
+            /\@angular(\\|\/)core(\\|\/)esm5/,
             helpers.root('./src'), // location of your src
             {} // a map of your routes
         ),
