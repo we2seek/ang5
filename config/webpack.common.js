@@ -5,10 +5,16 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const helpers = require('./helpers');
 const path = require('path');
 
-// const extractSass = new ExtractTextPlugin({
-//     filename: "[name].[contenthash].css",
-//     disable: process.env.NODE_ENV === "development"
-// });
+const extractConfig = {
+    filename: "[name].[contenthash].css",
+    disable: process.env.NODE_ENV !== "production",
+    allChunks: true
+};
+console.log(extractConfig);
+// TODO: define env variables correctly
+console.log(process.env.NODE_ENV);
+
+const extractSass = new ExtractTextPlugin(extractConfig);
 
 module.exports = {
     entry: {
@@ -18,7 +24,7 @@ module.exports = {
     },
 
     resolve: {
-        extensions: ['.ts', '.js', '.json']
+        extensions: ['.ts', '.js', '.json', '.scss']
     },
 
     module: {
@@ -41,50 +47,15 @@ module.exports = {
                 loader: 'file-loader?name=assets/[name].[hash].[ext]'
             },
 
-            // {
-            //     test: /\.css$/,
-            //     exclude: helpers.root('src', 'app'),
-            //     loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader?sourceMap' })
-            // },
-            // {
-            //     test: /\.css$/,
-            //     include: helpers.root('src', 'app'),
-            //     loader: 'raw-loader'
-            // },
-
-            // {
-            //     test: /\.scss$/,
-            //     use: [{
-            //         loader: "style-loader"
-            //     }, {
-            //         loader: "css-loader",
-            //         options: {
-            //             sourceMap: true,
-            //             minimize: true
-            //         }
-            //     }, {
-            //         loader: "sass-loader",
-            //         options: {
-            //             sourceMap: true
-            //         }
-            //     }]
-            // },
-
-            // loader config for angular component styles 
             {
-                test: /\.(scss|css)$/,
-                use: ['raw-loader', 'sass-loader'], // don't use css-loader for ng2 （unusual）
-            },
-            // loader config for global css files
-            {
-                test: /\.scss$/,
-                exclude: [/node_modules/, /src\/app/], 
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: ['css-loader', 'sass-loader']
-                })
-            },
-
+                test: /\.(css|scss)$/,
+                use: ['to-string-loader'].concat(
+                    extractSass.extract({
+                        fallback: "style-loader",
+                        use: ['css-loader', 'sass-loader']
+                    })
+                )
+            }
 
         ]
     },
@@ -105,6 +76,8 @@ module.exports = {
 
         new HtmlWebpackPlugin({
             template: 'src/index.html'
-        })
+        }),
+
+        extractSass
     ]
 };
