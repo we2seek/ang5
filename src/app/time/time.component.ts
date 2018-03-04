@@ -4,12 +4,15 @@ import { TimeStruct } from '../model/app.models';
 @Component({
     selector: 'app-time',
     template: `
-<label>Time: <span *ngIf="model">{{model}}</span></label><br/>
-<input type="time" [(ngModel)]="model" (ngModelChange)="modelChanged($event)">
+<mat-form-field>
+<input type="time" matInput 
+    [placeholder]="lbl" [(ngModel)]="model" (ngModelChange)="modelChanged($event)">
+</mat-form-field>
 `
 })
 export class TimeComponent implements OnInit {
     @Input() time: TimeStruct;
+    @Input() lbl: string;
     @Output() change: EventEmitter<TimeStruct> = new EventEmitter<TimeStruct>();
     model: string;
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TimeStruct } from './model/app.models';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import { TimeStruct } from './model/app.models';
 })
 export class AppComponent implements OnInit {
   globalTime: TimeStruct;
+  emailFormControl: FormControl = new FormControl();
 
   ngOnInit() {
     this.globalTime = { hour: 15, minute: 10, second: 1 };
