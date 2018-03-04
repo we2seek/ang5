@@ -1,1 +1,6 @@
-<h5>App Root</h5>
+<h4>Main Page</h4>
+<div class="small">{{ globalTime | json }}</div>
+<app-time 
+    [time]="globalTime" 
+    (change)="update($event)">
+</app-time>
